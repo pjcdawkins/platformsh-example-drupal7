@@ -31,7 +31,12 @@ if (file_exists(__DIR__ . '/settings.platformsh.php')) {
 }
 
 // Include local settings. These come last so that they can override anything.
-$on_platformsh = getenv('PLATFORM_PROJECT') !== FALSE;
-if (file_exists(__DIR__ . '/settings.local.php') && !$on_platformsh) {
+//
+// Under the "drupal" build mode, Platform.sh automatically adds a
+// settings.local.php file to the build, but this is a legacy file only kept
+// for backwards compatibility. So we deliberately ignore the file when
+// running in a Platform.sh environment.
+$ignore_settings_local = getenv('PLATFORM_PROJECT') !== FALSE;
+if (file_exists(__DIR__ . '/settings.local.php') && !$ignore_settings_local) {
   require_once(__DIR__ . '/settings.local.php');
 }
